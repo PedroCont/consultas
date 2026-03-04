@@ -22,6 +22,42 @@ const paciente1: Paciente = {
   email: "beca.sant@email.com",
 };
 
+const Ofitalmo: Especialidade = {
+  id: 2,
+  nome: "Ofitalmo",
+};
+const medico2: Medico = {
+  id: 2,
+  nome: "Dr. Pedro dos Anjos",
+  crm: "CRM40336",
+  especialidade: Ofitalmo,
+  ativo: true,
+};
+const paciente2: Paciente = {
+  id: 2,
+  nome: "Ana Julia",
+  cpf: "414.234.476-20",
+  email: "anah.juju@email.com",
+};
+
+const pedriatra: Especialidade = {
+  id: 3,
+  nome: "pedriatra",
+};
+const medico3: Medico = {
+  id: 3,
+  nome: "Dr. Marco Roberto",
+  crm: "CRM50446",
+  especialidade: pedriatra,
+  ativo: true,
+};
+const paciente3: Paciente = {
+  id: 3,
+  nome: "Maria Santos",
+  cpf: "353.234.870-30",
+  email: "Mari.sant@email.com",
+};
+
 function criarConsulta(
   id: number,
   medico: Medico,
@@ -72,6 +108,20 @@ Status: ${consulta.status}
 `;
 }
 
+function listarConsultasPorStatus(
+  consultas: Consulta[],
+  status: StatusConsulta
+): Consulta[] {
+  return consultas.filter((consulta) => consulta.status === status);
+}
+
+function listarConsultasFuturas(consultas: Consulta[]): Consulta[] {
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0); // Zera horas para comparar apenas a data
+  return consultas.filter((consulta) => consulta.data >= hoje);
+}
+
+// Consulta 1 - Agendada
 const consulta1 = criarConsulta(
   1,
   medico1,
@@ -82,3 +132,31 @@ const consulta1 = criarConsulta(
 const consultaConfirmada = confirmarConsulta(consulta1);
 console.log("=== CONSULTA CONFIRMADA ===");
 console.log(exibirConsulta(consultaConfirmada));
+
+const consulta2 = criarConsulta(
+  1,
+  medico1,
+  paciente1,
+  new Date(),
+  350
+);
+const consultaConfirmada = confirmarConsulta(consulta2);
+console.log("=== CONSULTA CONFIRMADA ===");
+console.log(exibirConsulta(consultaConfirmada));
+
+const consulta3 = criarConsulta(
+  1,
+  medico1,
+  paciente1,
+  new Date(),
+  350
+);
+const consultaConfirmada = confirmarConsulta(consulta3);
+console.log("=== CONSULTA CONFIRMADA ===");
+console.log(exibirConsulta(consultaConfirmada));
+
+const consultas: Consulta[] = [
+  criarConsulta(1, medico1, paciente1, new Date(), 350),
+  criarConsulta(2, medico2, paciente2, new Date(), 400),
+  criarConsulta(3, medico3, paciente3, new Date(), 300),
+];

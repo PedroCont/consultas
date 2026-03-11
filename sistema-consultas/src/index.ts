@@ -117,8 +117,14 @@ function listarConsultasPorStatus(
 
 function listarConsultasFuturas(consultas: Consulta[]): Consulta[] {
   const hoje = new Date();
-  hoje.setHours(0, 0, 0, 0); // Zera horas para comparar apenas a data
+  hoje.setHours(0, 0, 0, 0);
   return consultas.filter((consulta) => consulta.data >= hoje);
+}
+
+function calcularFaturamento(consultas: Consulta[]): number {
+  return consultas
+    .filter((consulta) => consulta.status === "realizada")
+    .reduce((total, consulta) => total + consulta.valor, 0);
 }
 
 // Consulta 1 - Agendada
@@ -126,37 +132,63 @@ const consulta1 = criarConsulta(
   1,
   medico1,
   paciente1,
-  new Date(),
-  350
+  new Date('2026-01-28'),
+  300
 );
 const consultaConfirmada = confirmarConsulta(consulta1);
 console.log("=== CONSULTA CONFIRMADA ===");
 console.log(exibirConsulta(consultaConfirmada));
 
 const consulta2 = criarConsulta(
-  1,
-  medico1,
-  paciente1,
-  new Date(),
-  350
+  2,
+  medico2,
+  paciente2,
+  new Date('2026-03-31'),
+  500
 );
-const consultaConfirmada = confirmarConsulta(consulta2);
-console.log("=== CONSULTA CONFIRMADA ===");
-console.log(exibirConsulta(consultaConfirmada));
+const consultaCancelada = cancelarConsulta(consulta2);
+console.log("=== CONSULTA CANCELADA ===");
+if (consultaCancelada) {
+  console.log(exibirConsulta(consultaCancelada));
+}
 
 const consulta3 = criarConsulta(
-  1,
-  medico1,
-  paciente1,
-  new Date(),
+  3,
+  medico3,
+  paciente3,
+  new Date('2026-03-21'),
   350
 );
-const consultaConfirmada = confirmarConsulta(consulta3);
+const consultaRealizada: Consulta = {
+  ...consulta3,
+  status: "realizada",
+};
+console.log("=== CONSULTA REALIZADA ===");
+console.log(exibirConsulta(consultaRealizada));
+
+const consulta4 = criarConsulta(
+  4,
+  medico1,
+  paciente2,
+  new Date('2026-04-01'),
+  450
+);
+const consultaConfirmada2 = confirmarConsulta(consulta4);
 console.log("=== CONSULTA CONFIRMADA ===");
-console.log(exibirConsulta(consultaConfirmada));
+console.log(exibirConsulta(consultaConfirmada2));
 
 const consultas: Consulta[] = [
-  criarConsulta(1, medico1, paciente1, new Date(), 350),
-  criarConsulta(2, medico2, paciente2, new Date(), 400),
-  criarConsulta(3, medico3, paciente3, new Date(), 300),
+  consultaConfirmada,
+  consultaCancelada!,
+  consultaRealizada,
+  consultaConfirmada2
 ];
+
+const faturamentoTotal = calcularFaturamento(consultas);
+console.log("=== FATURAMENTO TOTAL ===");
+console.log(
+  faturamentoTotal.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  })
+);
